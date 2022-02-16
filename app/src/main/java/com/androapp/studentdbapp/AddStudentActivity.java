@@ -14,10 +14,13 @@ public class AddStudentActivity extends AppCompatActivity {
     EditText ed1,ed2,ed3,ed4;
     AppCompatButton b1,b2;
     String getName,getAdno,getRoll,getCol;
+    DatabaseHelper dbhelp;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_student);
+        dbhelp=new DatabaseHelper(this);
+        dbhelp.getReadableDatabase();
         ed1=(EditText)findViewById(R.id.name);
         ed2=(EditText) findViewById(R.id.adno);
         ed3=(EditText) findViewById(R.id.roll);
@@ -32,10 +35,20 @@ public class AddStudentActivity extends AppCompatActivity {
                 getAdno=ed2.getText().toString();
                 getRoll=ed3.getText().toString();
                 getCol=ed4.getText().toString();
-                Toast.makeText(getApplicationContext(),getName, Toast.LENGTH_SHORT).show();
-                Toast.makeText(getApplicationContext(), getAdno, Toast.LENGTH_SHORT).show();
-                Toast.makeText(getApplicationContext(), getRoll, Toast.LENGTH_SHORT).show();
-                Toast.makeText(getApplicationContext(), getCol, Toast.LENGTH_SHORT).show();
+
+                boolean result=dbhelp.insertData(getName,getRoll,getAdno,getCol);
+                if (result==true)
+                {
+                    ed1.setText("");
+                    ed2.setText("");
+                    ed3.setText("");
+                    ed4.setText("");
+
+                    Toast.makeText(getApplicationContext(), "Successfully inserted", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), "Failed to insert", Toast.LENGTH_SHORT).show();
+                }
             }
         });
         b2.setOnClickListener(new View.OnClickListener() {
